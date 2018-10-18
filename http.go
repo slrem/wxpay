@@ -32,9 +32,9 @@ func NewAppTrans(cfg *WxConfig) (*AppTrans, error) {
 // Submit the order to weixin pay and return the prepay id if success,
 // Prepay id is used for app to start a payment
 // If fail, error is not nil, check error for more information
-func (this *AppTrans) Submit(orderId string, amount float64, desc string, clientIp string) (string, error) {
+func (this *AppTrans) Submit(orderId string, amount int, desc string, attach string, clientIp string) (string, error) {
 
-	odrInXml := this.signedOrderRequestXmlString(orderId, fmt.Sprintf("%.0f", amount), desc, clientIp)
+	odrInXml := this.signedOrderRequestXmlString(orderId, fmt.Sprint(amount), desc, attach, clientIp)
 	resp, err := doHttpPost(this.Config.PlaceOrderUrl, []byte(odrInXml))
 	if err != nil {
 		return "", err
@@ -47,11 +47,6 @@ func (this *AppTrans) Submit(orderId string, amount float64, desc string, client
 
 	//Verify the sign of response
 	resultInMap := placeOrderResult.ToMap()
-	wantSign := Sign(resultInMap, this.Config.AppKey)
-	gotSign := resultInMap["sign"]
-	if wantSign != gotSign {
-		return "", fmt.Errorf("sign not match, want:%s, got:%s", wantSign, gotSign)
-	}
 
 	if placeOrderResult.ReturnCode != "SUCCESS" {
 		return "", fmt.Errorf("return code:%s, return desc:%s", placeOrderResult.ReturnCode, placeOrderResult.ReturnMsg)
@@ -59,6 +54,11 @@ func (this *AppTrans) Submit(orderId string, amount float64, desc string, client
 
 	if placeOrderResult.ResultCode != "SUCCESS" {
 		return "", fmt.Errorf("resutl code:%s, result desc:%s", placeOrderResult.ErrCode, placeOrderResult.ErrCodeDesc)
+	}
+	wantSign := Sign(resultInMap, this.Config.AppKey)
+	gotSign := resultInMap["sign"]
+	if wantSign != gotSign {
+		return "", fmt.Errorf("sign not match, want:%s, got:%s", wantSign, gotSign)
 	}
 
 	return placeOrderResult.PrepayId, nil
@@ -133,10 +133,10 @@ func (this *AppTrans) NewPaymentRequest(prepayId string) PaymentRequest {
 	return payRequest
 }
 
-func (this *AppTrans) newOrderRequest(orderId, amount, desc, clientIp string) map[string]string {
+func (this *AppTrans) newOrderRequest(orderId, amount, desc, attach, clientIp string) map[string]string {
 	param := make(map[string]string)
 	param["appid"] = this.Config.AppId
-	param["attach"] = "透传字段" //optional
+	param["attach"] = attach //optional
 	param["body"] = desc
 	param["mch_id"] = this.Config.MchId
 	param["nonce_str"] = NewNonceString()
@@ -149,8 +149,8 @@ func (this *AppTrans) newOrderRequest(orderId, amount, desc, clientIp string) ma
 	return param
 }
 
-func (this *AppTrans) signedOrderRequestXmlString(orderId, amount, desc, clientIp string) string {
-	order := this.newOrderRequest(orderId, amount, desc, clientIp)
+func (this *AppTrans) signedOrderRequestXmlString(orderId, amount, desc, attach, clientIp string) string {
+	order := this.newOrderRequest(orderId, amount, desc, attach, clientIp)
 	sign := Sign(order, this.Config.AppKey)
 	// fmt.Println(sign)
 
