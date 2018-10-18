@@ -7,5 +7,4 @@ type WxConfig struct {
 	NotifyUrl     string
 	PlaceOrderUrl string
 	QueryOrderUrl string
-	TradeType     string
 }

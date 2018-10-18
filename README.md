@@ -18,24 +18,28 @@ cfg := &wxpay.WxConfig{
 	QueryOrderUrl: "https://api.mch.weixin.qq.com/pay/orderquery",
 	TradeType:     "APP",
 }
-appTrans, err := wxpay.NewAppTrans(cfg)
+wxPay, err := wxpay.NewAppTrans(cfg)
 if err != nil {
 	panic(err)
 }
 
 //获取prepay id，手机端得到prepay id后加上验证就可以使用这个id发起支付调用 金额单位是分
-prepayId, err := appTrans.Submit("WOBHXLNSDFFALB7NLKN4FLVMPY", 1, "订单描述","透传字段", "114.25.139.11")
+prepayId, err := wxPay.AppSubmit("WOBHXLNSDFFALB7NLKN4FLVMPY", 1, "订单描述","透传字段", "114.25.139.11")
 if err != nil {
 	panic(err)
 }
 fmt.Println(prepayId)
 
+//h5支付获取跳转地址
+mwebUrl,err: = wxpay.H5Submit("WOBHXLNSDFFALB7NLKN4FLVMPY", 1, "订单描述","透传字段", "114.25.139.11","场景信息")
+fmt.Println(prepayId,err)
+
 //加上Sign，已方便手机直接调用
-payRequest := appTrans.NewPaymentRequest(prepayId)
+payRequest := wxPay.NewPaymentRequest(prepayId)
 fmt.Println(payRequest)
 
 //查询订单接口
-queryResult, err := appTrans.Query("1008450740201411110005820873")
+queryResult, err := wxPay.Query("1008450740201411110005820873")
 if err != nil {
 	panic(err)
 }

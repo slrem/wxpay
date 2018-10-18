@@ -21,6 +21,7 @@ type PlaceOrderResult struct {
 	TradeType   string   `xml:"trade_type"`
 	PrepayId    string   `xml:"prepay_id"`
 	CodeUrl     string   `xml:"code_url"`
+	MwebUrl     string   `xml:"mweb_url"`
 }
 
 func (this *PlaceOrderResult) ToMap() map[string]string {
