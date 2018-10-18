@@ -23,8 +23,8 @@ if err != nil {
 	panic(err)
 }
 
-//获取prepay id，手机端得到prepay id后加上验证就可以使用这个id发起支付调用
-prepayId, err := appTrans.Submit("WOBHXLNSDFFALB7NLKN4FLVMPY", 1, "订单描述", "114.25.139.11")
+//获取prepay id，手机端得到prepay id后加上验证就可以使用这个id发起支付调用 金额单位是分
+prepayId, err := appTrans.Submit("WOBHXLNSDFFALB7NLKN4FLVMPY", 1, "订单描述","透传字段", "114.25.139.11")
 if err != nil {
 	panic(err)
 }
