@@ -16,7 +16,6 @@ cfg := &wxpay.WxConfig{
 	NotifyUrl:     "后台通知地址",
 	PlaceOrderUrl: "https://api.mch.weixin.qq.com/pay/unifiedorder",
 	QueryOrderUrl: "https://api.mch.weixin.qq.com/pay/orderquery",
-	TradeType:     "APP",
 }
 wxPay, err := wxpay.NewAppTrans(cfg)
 if err != nil {
