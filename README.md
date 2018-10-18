@@ -17,7 +17,7 @@ cfg := &wxpay.WxConfig{
 	PlaceOrderUrl: "https://api.mch.weixin.qq.com/pay/unifiedorder",
 	QueryOrderUrl: "https://api.mch.weixin.qq.com/pay/orderquery",
 }
-wxPay, err := wxpay.NewAppTrans(cfg)
+wxPay, err := wxpay.NewWxPay(cfg)
 if err != nil {
 	panic(err)
 }
