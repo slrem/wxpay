@@ -92,7 +92,7 @@ func (this *WxPay) H5Submit(orderId string, amount int, desc string, attach stri
 		return "", fmt.Errorf("sign not match, want:%s, got:%s", wantSign, gotSign)
 	}
 
-	return placeOrderResult.PrepayId, nil
+	return placeOrderResult.MwebUrl, nil
 }
 
 func (this *WxPay) newQueryXml(out_trade_no string) string {
