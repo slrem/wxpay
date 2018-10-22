@@ -1,11 +1,11 @@
 package wxpay
 
 type PaymentRequest struct {
-	AppId     string
-	PartnerId string
-	PrepayId  string
-	Package   string
-	NonceStr  string
-	Timestamp string
-	Sign      string
+	AppId     string `json:"appId"`
+	PartnerId string `json:"partnerId"`
+	PrepayId  string `json:"prepayId"`
+	Package   string `json:"package"`
+	NonceStr  string `json:"nonceStr"`
+	Timestamp string `json:"timeStamp"`
+	Sign      string `json:"sign"`
 }
